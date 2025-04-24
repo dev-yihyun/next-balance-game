@@ -1,7 +1,9 @@
+import ComingSoonMessage from "@/component/ComingSoonMessage";
+
 function MainPage() {
     return (
         <>
-            <h1>MainPage 준비중</h1>
+            <ComingSoonMessage />
         </>
     );
 }

@@ -1,6 +1,6 @@
 import ComingSoonMessage from "@/component/ComingSoonMessage";
 
-function NewPage({ children }: { children: React.ReactNode }) {
+function NewPage() {
     return <ComingSoonMessage />;
 }
 

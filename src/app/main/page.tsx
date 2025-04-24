@@ -6,11 +6,7 @@ export const metadata: Metadata = {
 };
 
 function MainPage() {
-    return (
-        <>
-            <ComingSoonMessage />
-        </>
-    );
+    return <ComingSoonMessage />;
 }
 
 export default MainPage;

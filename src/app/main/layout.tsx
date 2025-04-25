@@ -4,7 +4,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
     return (
         <section>
             <NavBar />
-            {children}
+            <main>{children}</main>
         </section>
     );
 }

@@ -1,7 +1,7 @@
-import ComingSoonMessage from "@/component/ComingSoonMessage";
+import CreateQuestionForm from "@/component/CreateQuestionForm";
 
 function NewPage() {
-    return <ComingSoonMessage />;
+    return <CreateQuestionForm />;
 }
 
 export default NewPage;

@@ -1,3 +1,7 @@
+import InputComponent from "./ui/InputComponent";
+import LabelText from "./ui/LabelText";
+import SubText from "./ui/SubText";
+
 function CreateQuestionForm() {
     return (
         <>
@@ -6,77 +10,37 @@ function CreateQuestionForm() {
                 <div>
                     <form className="bg-white flex flex-col rounded-md p-5 gap-8">
                         <div>
-                            <label className="text-xl font-bold block mb-2 ">
-                                고르기 힘든 질문을 써봐!🤯
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="제목"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black-400"
-                            />
+                            <LabelText text="고르기 힘든 질문을 써봐!🤯" />
+                            <InputComponent placeholder="제목" />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="text-xl font-bold  block mb-2">
-                                    🥰 첫 번째 유혹은 뭐야?
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="예: 평생 카레만 먹기"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black-400"
-                                />
+                                <LabelText text="🥰 첫 번째 선택지는 뭐야?" />
+                                <InputComponent placeholder="예: 평생 카레만 먹기" />
                             </div>
                             <div>
-                                <label className="text-xl font-bold  block mb-2">
-                                    두 번째 선택지, 더 세게 가보자 🤩
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="예: 평생 짜장면만 먹기"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black-400"
-                                />
+                                <LabelText text="두 번째 선택지, 더 세게 가보자 🤩" />
+                                <InputComponent placeholder="예: 평생 짜장면만 먹기" />
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="text-xl font-bold  block mb-2">
-                                    이게 왜 더 괴로운지 설명해봐😇
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="예: 이빨도 같이 카레색 됨"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black-400"
-                                />
+                                <LabelText text=" 이게 왜 더 괴로운지 설명해봐😇" />
+                                <InputComponent placeholder="예: 이빨도 같이 카레색 됨" />
                             </div>
                             <div>
-                                <label className="text-xl font-bold  block mb-2">
-                                    더 쉽게 만들고 싶으면 여기에 써😈
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="예: 밥, 국물, 탕수육 못먹음"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black-400"
-                                />
+                                <LabelText text="더 쉽게 만들고 싶으면 여기에 써😈" />
+                                <InputComponent placeholder="예: 밥, 국물, 탕수육 못먹음" />
                             </div>
                         </div>
 
                         <div>
-                            <h2 className="text-xl font-bold mb-2">사용자 정보</h2>
-                            <p className="text-sm text-gray-500 mb-2">
-                                이 비밀번호는 나중에 질문을 삭제할 때 사용됩니다. 꼭 기억해두세요!
-                            </p>
+                            <LabelText text="사용자 정보" />
+                            <SubText text=" 이 비밀번호는 나중에 질문을 삭제할 때 사용됩니다. 꼭 기억해두세요!" />
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input
-                                    type="text"
-                                    placeholder="사용자 아이디"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black-400"
-                                />
-                                <input
-                                    type="password"
-                                    placeholder="사용자 비밀번호"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black-400"
-                                />
+                                <InputComponent placeholder="사용자 아이디" />
+                                <InputComponent type="password" placeholder="사용자 비밀번호" />
                             </div>
                         </div>
                         <div className="w-full flex justify-end">
@@ -92,44 +56,6 @@ function CreateQuestionForm() {
 }
 
 export default CreateQuestionForm;
-{
-    /* <label>고르기 힘든 질문을 써봐 🥸</label>
-                        <input type="text" placeholder="제목목" />
-                        <label>😃첫 번째 유혹은 뭐야?</label>
-                        <input
-                            type="text"
-                            placeholder="예: 평생 카레만 먹기
-"
-                        />
-                        <label>두 번째 선택지, 더 세게 가보자 😫</label>
-                        <input
-                            type="text"
-                            placeholder="예: 평생 짜장면만 먹기
-"
-                        />
-                        <label>이게 왜 더 괴로운지 설명해봐🤩</label>
-                        <input
-                            type="text"
-                            placeholder="예: 이빨도 같이 카레색 됨
-"
-                        />
-                        <label>더 싫게 만들고 싶으면 여기에 써👹</label>
-                        <input
-                            type="text"
-                            placeholder="예: 밥, 국물 ,탕수육 못먹음
-"
-                        />
-                        <label>사용자 정보</label>
-                        <p>이 비밀번호는 나중에 질문을 삭제할 때 사용됩니다. 꼭 기억해두세요!</p>
-                        <input
-                            type="text"
-                            placeholder="사용자 아이디
-"
-                        />
-                        <input
-                            type="password"
-                            placeholder="사용자 비밀번호
-"
-                        />
-                        <button type="submit">질문 생성</button> */
-}
+/*
+- 글자수 최대 길이
+*/

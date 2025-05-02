@@ -36,7 +36,6 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased  min-h-screen bg-gradient-to-br from-[#a58fff] to-[#ffa77f] mx-10`}
             >
                 <ReactQueryProvider>
-                    {" "}
                     <main>{children}</main>
                 </ReactQueryProvider>
             </body>

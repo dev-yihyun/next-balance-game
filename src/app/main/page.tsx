@@ -1,4 +1,4 @@
-import ComingSoonMessage from "@/component/ComingSoonMessage";
+import PostList from "@/component/PostList";
 import { Metadata } from "next";
 export const metadata: Metadata = {
     title: "ComingSoon",
@@ -6,7 +6,11 @@ export const metadata: Metadata = {
 };
 
 function MainPage() {
-    return <ComingSoonMessage />;
+    return (
+        <>
+            <PostList />
+        </>
+    );
 }
 
 export default MainPage;

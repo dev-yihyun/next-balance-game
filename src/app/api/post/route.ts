@@ -14,6 +14,9 @@ export async function GET() {
         );
     } catch (error) {
         console.error("서버 에러:", error);
-        return NextResponse.json({ message: "서버 에러", error: String(error) }, { status: 500 });
+        return NextResponse.json(
+            { message: "서버 에러", success: false, error: String(error) },
+            { status: 500 }
+        );
     }
 }

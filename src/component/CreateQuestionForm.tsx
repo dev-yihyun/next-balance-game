@@ -163,7 +163,7 @@ function CreateQuestionForm() {
                         <div className="w-full flex justify-end">
                             <button
                                 type="button"
-                                // disabled={!isFormValid}
+                                disabled={!isFormValid}
                                 className={`text-white text-lg font-bold p-3 rounded-md transition
                                     ${
                                         isFormValid

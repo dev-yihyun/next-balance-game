@@ -49,7 +49,8 @@ function CreateQuestionForm() {
             alert("모든 필드를 공백 없이 입력해주세요!");
             return;
         }
-        console.log("폼 제출됨:", {
+
+        const addData = {
             title,
             option1,
             option2,
@@ -57,7 +58,23 @@ function CreateQuestionForm() {
             option2description,
             userId,
             userPw,
-        });
+        };
+
+        try {
+            const response = await fetch("/api/post", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(addData),
+            });
+
+            if (!response.ok) {
+                throw new Error("추가 요청 실패");
+            }
+        } catch (error) {
+            console.error("추가 중 오류 발생:", error);
+        }
 
         // 입력값 초기화
         setTitle("");

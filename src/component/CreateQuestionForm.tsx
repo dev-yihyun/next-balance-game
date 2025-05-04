@@ -38,8 +38,6 @@ function CreateQuestionForm() {
         title.trim() !== "" &&
         option1.trim() !== "" &&
         option2.trim() !== "" &&
-        // option1description.trim() !== "" &&
-        // option2description.trim() !== "" &&
         userId.trim() !== "" &&
         userPw.trim() !== "" &&
         isValidLength;

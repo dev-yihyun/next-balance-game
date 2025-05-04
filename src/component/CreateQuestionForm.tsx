@@ -38,8 +38,8 @@ function CreateQuestionForm() {
         title.trim() !== "" &&
         option1.trim() !== "" &&
         option2.trim() !== "" &&
-        option1description.trim() !== "" &&
-        option2description.trim() !== "" &&
+        // option1description.trim() !== "" &&
+        // option2description.trim() !== "" &&
         userId.trim() !== "" &&
         userPw.trim() !== "" &&
         isValidLength;
@@ -92,7 +92,7 @@ function CreateQuestionForm() {
                 <div>
                     <form className="bg-white flex flex-col rounded-md p-5 gap-8">
                         <div>
-                            <LabelText text="고르기 힘든 질문을 써봐!🤯" />
+                            <LabelText text="🤯 고르기 힘든 질문을 써봐!" />
                             <InputComponent
                                 placeholder="제목"
                                 required
@@ -117,10 +117,9 @@ function CreateQuestionForm() {
                                 />
                             </div>
                             <div>
-                                <LabelText text=" 이게 왜 더 괴로운지 설명해봐😇" />
+                                <LabelText text=" 이게 왜 더 괴로운지 설명해봐" />
                                 <InputComponent
                                     placeholder="예: 이빨도 같이 카레색 됨"
-                                    required
                                     value={option1description}
                                     onChange={(e) => setOption1Description(e.target.value)}
                                     maxLength={50}
@@ -145,10 +144,9 @@ function CreateQuestionForm() {
                                 />
                             </div>
                             <div>
-                                <LabelText text="더 어렵게 만들고 싶으면 여기에 써😈" />
+                                <LabelText text="더 어렵게 만들고 싶으면 여기에 써" />
                                 <InputComponent
                                     placeholder="예: 밥, 국물, 탕수육 못먹음"
-                                    required
                                     value={option2description}
                                     onChange={(e) => setOption2Description(e.target.value)}
                                     maxLength={50}
@@ -157,7 +155,7 @@ function CreateQuestionForm() {
                         </div>
 
                         <div>
-                            <LabelText text="사용자 정보" />
+                            <LabelText text="ℹ️ 사용자 정보" />
                             <SubText text=" 이 비밀번호는 나중에 질문을 삭제할 때 사용됩니다. 꼭 기억해두세요!" />
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <InputComponent

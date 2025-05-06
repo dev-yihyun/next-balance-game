@@ -2,6 +2,7 @@
 
 import { Post } from "@/model/post";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import DataFetchError from "./DataFetchError";
 import LoadingSpinner from "./LoadingSpinner";
 import PostEmpty from "./PostEmpty";
@@ -41,7 +42,9 @@ function PostList() {
             ) : (
                 <>
                     {posts.map((post: Post) => (
-                        <PostListCard key={post.postid} post={post} />
+                        <Link key={post.postid} href={`/main/post/${post?.postid}`}>
+                            <PostListCard posttitle={post?.title ?? ""} />
+                        </Link>
                     ))}
                 </>
             )}

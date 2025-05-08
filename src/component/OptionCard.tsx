@@ -1,4 +1,11 @@
-function OptionCard() {
+type Props = {
+    options?: {
+        title: string;
+        description: string;
+        voteCount: number;
+    };
+};
+function OptionCard({ options }: Props) {
     return (
         <div
             className="flex flex-col
@@ -14,10 +21,16 @@ function OptionCard() {
                 "
         >
             <h1 className="text-2xl sm:text-3xl font-bold whitespace-normal sm:whitespace-normal">
-                제목
+                {options?.title}
             </h1>
-            <div className="w-full h-0.5 bg-gray-300 my-2" />
-            <p className="text-base sm:text-lg whitespace-normal sm:whitespace-normal">부연설명</p>
+            {options?.description && (
+                <>
+                    <div className="w-full h-0.5 bg-gray-300 my-2" />
+                    <p className="text-base sm:text-lg whitespace-normal sm:whitespace-normal">
+                        {options?.description}
+                    </p>
+                </>
+            )}
         </div>
     );
 }

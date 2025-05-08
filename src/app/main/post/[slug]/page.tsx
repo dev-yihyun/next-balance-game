@@ -1,19 +1,63 @@
+"use client";
+
 import OptionCard from "@/component/OptionCard";
 import PostListCard from "@/component/PostListCard";
+import { useEffect, useState } from "react";
 
-async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
-    const { slug: postid } = await params;
+/*
+[TODO]
+postid가 없는 경우
+존재하지 않는 데이터
+*/
+
+type Post = {
+    postid: string;
+    createdAt: string; // 또는 Date
+    title: string;
+    options: {
+        option1: {
+            title: string;
+            description: string;
+            voteCount: number;
+        };
+        option2: {
+            title: string;
+            description: string;
+            voteCount: number;
+        };
+    };
+    voteCount: number;
+    userinfo: {
+        userid: string;
+        userpw: string;
+    };
+};
+function PostPage({ params }: { params: { slug: string } }) {
+    const postid = params.slug;
+    const [post, setPost] = useState<Post | null>(null);
+
+    const fetchPost = async () => {
+        const res = await fetch(`/api/post/${params.slug}`);
+        const data = await res.json();
+        setPost(data.data);
+    };
+
+    useEffect(() => {
+        fetchPost();
+    }, []);
+
+    console.log("##Post : ", post?.userinfo);
 
     return (
         <>
             <section className="flex flex-col gap-5 p-5 pt-10 h-auto ">
                 <div className="">
-                    <PostListCard posttitle={"텍스트입니다."} />
+                    <PostListCard posttitle={post?.title ?? "제목 없음"} />
                 </div>
                 <div className="flex flex-col sm:flex-row sm:justify-around sm:items-center gap-15 sm:gap-10">
-                    <OptionCard />
+                    {post?.options?.option1 && <OptionCard options={post?.options?.option1} />}
                     <p className="text-2xl sm:text-4xl font-bold text-center sm:px-4">VS</p>
-                    <OptionCard />
+                    {post?.options?.option2 && <OptionCard options={post?.options?.option2} />}
                 </div>
 
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-4 mt-4">
@@ -33,7 +77,7 @@ async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
                     {/* 오른쪽 - 작성자/삭제 버튼 */}
                     <div className="flex justify-center sm:justify-end gap-4 w-full sm:w-1/3">
                         <p className="flex items-center whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 cursor-pointer hover:bg-gray-300">
-                            작성자이름
+                            {post?.userinfo?.userid ?? "익명"}
                         </p>
                         <button className="whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 cursor-pointer hover:bg-gray-300">
                             삭제

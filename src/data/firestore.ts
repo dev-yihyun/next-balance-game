@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import {
     collection,
     doc,
+    getDoc,
     getDocs,
     getFirestore,
     orderBy,
@@ -32,7 +33,8 @@ const db = getFirestore(app);
 
 // 모든 게시글 가져오기
 export async function fetchAllPost() {
-    const querySnapshot = await getDocs(collection(db, "posts"));
+    const postQuery = query(collection(db, "posts"), orderBy("createdAt", "desc")); // 최신순 정렬
+    const querySnapshot = await getDocs(postQuery);
     if (querySnapshot.empty) {
         return [];
     }
@@ -56,7 +58,7 @@ export async function addPost(postData: {
 }) {
     const { title, option1, option2, option1description, option2description, userId, userPw } =
         postData;
-    const newDataRef = doc(collection(db, "posts"));
+    // const newDataRef = doc(collection(db, "posts"));
     const getQuery = query(collection(db, "posts"), orderBy("postid", "desc"));
     const querySnapshot = await getDocs(getQuery);
     let nextPostId = 0;
@@ -79,8 +81,36 @@ export async function addPost(postData: {
             userpw: userPw,
         },
     };
+
+    // 문서 ID를 postid와 동일하게 설정
+    const postIdString = String(nextPostId);
+    const newDataRef = doc(db, "posts", postIdString);
     await setDoc(newDataRef, addData);
     return addData;
+}
+
+// src/data/firestore.ts
+export async function fetchSinglelPost(postid: string) {
+    if (!postid) {
+        return null;
+    }
+
+    const fetchDataDocRef = doc(db, "posts", postid);
+    // const fetchDataDocRef = doc(db, "posts", "thd7T90G60");
+    const fetchDataDocSnap = await getDoc(fetchDataDocRef);
+
+    if (!fetchDataDocSnap.exists()) {
+        return null;
+    }
+
+    const data = fetchDataDocSnap.data();
+
+    return {
+        postid: data?.postid,
+        title: data?.title,
+        options: data?.options,
+        userinfo: data?.userInfo,
+    };
 }
 
 // posts (Collection)

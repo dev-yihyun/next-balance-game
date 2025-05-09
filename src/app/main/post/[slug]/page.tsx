@@ -1,8 +1,10 @@
 "use client";
 
+import DataFetchError from "@/component/DataFetchError";
+import LoadingSpinner from "@/component/LoadingSpinner";
 import OptionCard from "@/component/OptionCard";
 import PostListCard from "@/component/PostListCard";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 /*
 [TODO]
@@ -33,21 +35,19 @@ type Post = {
     };
 };
 function PostPage({ params }: { params: { slug: string } }) {
-    const postid = params.slug;
-    const [post, setPost] = useState<Post | null>(null);
-
     const fetchPost = async () => {
-        const res = await fetch(`/api/post/${params.slug}`);
-        const data = await res.json();
-        setPost(data.data);
+        const response = await fetch(`/api/post/${params.slug}`);
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || "포스트를 불러오는 데 실패했습니다.");
+        }
+        return data?.data;
     };
 
-    useEffect(() => {
-        fetchPost();
-    }, []);
+    const { isLoading, error, data: post } = useQuery({ queryKey: ["posts"], queryFn: fetchPost });
+    if (isLoading) return <LoadingSpinner />;
 
-    console.log("##Post : ", post?.userinfo);
-
+    if (error) return <DataFetchError error={error} />;
     return (
         <>
             <section className="flex flex-col gap-5 p-5 pt-10 h-auto ">

@@ -1,15 +1,15 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import InputComponent from "./ui/InputComponent";
 import LabelText from "./ui/LabelText";
 import SubText from "./ui/SubText";
-/*
-[TODO]
-- 생성 후 메인 페이지로
-*/
+
 function CreateQuestionForm() {
+    const router = useRouter();
+
     const MAX = {
         title: 50,
         option: 30,
@@ -65,11 +65,13 @@ function CreateQuestionForm() {
         setOption2Description("");
         setUserId("");
         setUserPw("");
-        alert("질문이 성공적으로 등록되었습니다!");
+        alert("질문이 성공적으로 등록되었습니다! 메인으로 이동합니다.");
+        router.push("/main");
     };
     const setOnError = (error: any) => {
         console.error("오류 발생:", error);
-        alert("질문 등록 중 오류가 발생했습니다.");
+        alert("질문 등록 중 오류가 발생했습니다!  메인으로 이동합니다.");
+        router.push("/main");
     };
     const insertQuestionMutation = useMutation({
         mutationFn: createQuestion,
@@ -92,32 +94,8 @@ function CreateQuestionForm() {
             userId,
             userPw,
         };
+
         insertQuestionMutation.mutate(addData);
-
-        // try {
-        //     const response = await fetch("/api/post", {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify(addData),
-        //     });
-
-        //     if (!response.ok) {
-        //         throw new Error("추가 요청 실패");
-        //     }
-        // } catch (error) {
-        //     console.error("추가 중 오류 발생:", error);
-        // }
-
-        // // 입력값 초기화
-        // setTitle("");
-        // setOption1("");
-        // setOption2("");
-        // setOption1Description("");
-        // setOption2Description("");
-        // setUserId("");
-        // setUserPw("");
     };
     return (
         <>

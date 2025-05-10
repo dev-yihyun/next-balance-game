@@ -1,5 +1,5 @@
 type ErrorProp = {
-    error: Error;
+    error?: Error;
 };
 function DataFetchError({ error }: ErrorProp) {
     return (

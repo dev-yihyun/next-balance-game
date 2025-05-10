@@ -18,6 +18,7 @@ function OptionCard({ options }: Props) {
                 overflow-hidden
                 md:flex-wrap
                 gap-5
+                cursor-pointer
                 "
         >
             <h1 className="text-2xl sm:text-3xl font-bold whitespace-normal sm:whitespace-normal">

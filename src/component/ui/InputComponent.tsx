@@ -29,7 +29,7 @@ function InputComponent({
                 value={value}
                 onChange={onChange}
                 maxLength={maxLength}
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 transition
+                className={`w-full px-4 py-2 border rounded-md bg-white focus:outline-none focus:ring-1 transition
                 ${
                     isOverLimit
                         ? "border-red-500 ring-red-500"

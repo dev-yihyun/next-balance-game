@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import {
     collection,
+    deleteDoc,
     doc,
     getDoc,
     getDocs,
@@ -10,13 +11,6 @@ import {
     setDoc,
     Timestamp,
 } from "firebase/firestore";
-/*
-[TODO]
-- 사용자 정보 암호화
-- 게시글 저장 동시성 문제 해결하기
-: 현재 저장된 postid중 가장 큰 값 +1로 하면 경합조건 문제를 일으킬 수 있다.
-동시에 여러 사용자가 글을 올릴 경우 postid가 중복될 수있기 때문에 완전히 안전하게 처리하는 방법 구현하기
-*/
 
 // Firebase 설정
 const firebaseConfig = {
@@ -58,14 +52,12 @@ export async function addPost(postData: {
 }) {
     const { title, option1, option2, option1description, option2description, userId, userPw } =
         postData;
-    // const newDataRef = doc(collection(db, "posts"));
     const getQuery = query(collection(db, "posts"), orderBy("postid", "desc"));
     const querySnapshot = await getDocs(getQuery);
     let nextPostId = 0;
     if (!querySnapshot.empty) {
-        // 가장 큰 postId 가져오기
         const lastPost = querySnapshot.docs[0];
-        nextPostId = lastPost.data().postid + 1; // 마지막 postId + 1
+        nextPostId = lastPost.data().postid + 1;
     }
     const addData = {
         postid: nextPostId,
@@ -82,21 +74,19 @@ export async function addPost(postData: {
         },
     };
 
-    // 문서 ID를 postid와 동일하게 설정
     const postIdString = String(nextPostId);
     const newDataRef = doc(db, "posts", postIdString);
     await setDoc(newDataRef, addData);
     return addData;
 }
 
-// src/data/firestore.ts
+// 단일 게시글
 export async function fetchSinglelPost(postid: string) {
     if (!postid) {
         return null;
     }
 
     const fetchDataDocRef = doc(db, "posts", postid);
-    // const fetchDataDocRef = doc(db, "posts", "thd7T90G60");
     const fetchDataDocSnap = await getDoc(fetchDataDocRef);
 
     if (!fetchDataDocSnap.exists()) {
@@ -110,7 +100,19 @@ export async function fetchSinglelPost(postid: string) {
         title: data?.title,
         options: data?.options,
         userinfo: data?.userInfo,
+        createdAt: data?.createdAt.toDate().toLocaleString(),
     };
+}
+
+export async function deletedPost(postid: string) {
+    const fetchedData = await fetchSinglelPost(postid);
+
+    if (fetchedData === null) {
+        return null;
+    }
+
+    await deleteDoc(doc(db, "posts", postid));
+    return fetchedData;
 }
 
 // posts (Collection)

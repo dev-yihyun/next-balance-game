@@ -1,4 +1,4 @@
-import { deletedPost, fetchSinglelPost } from "@/data/firestore";
+import { deletedPost, fetchSinglelPost, voteOption } from "@/data/firestore";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: Request, { params }: { params: { slug: string } }) {
@@ -71,4 +71,27 @@ export async function DELETE(request: NextRequest, { params }: { params: { slug:
     }
 
     return NextResponse.json({ status: 200 });
+}
+
+// 투표처리
+export async function POST(request: Request, { params }: { params: { slug: string } }) {
+    const postid = params.slug;
+    const { option } = await request.json();
+
+    if (!option || !["option1", "option2"].includes(option)) {
+        return NextResponse.json(
+            { message: "올바르지 않은 옵션입니다.", success: false },
+            { status: 400 }
+        );
+    }
+    try {
+        await voteOption(postid, option);
+        return NextResponse.json({ message: "투표 성공", success: true }, { status: 200 });
+    } catch (error) {
+        console.error("투표 처리 중 오류:", error);
+        return NextResponse.json(
+            { message: "서버 오류", success: false, error: String(error) },
+            { status: 500 }
+        );
+    }
 }

@@ -10,6 +10,7 @@ import {
     query,
     setDoc,
     Timestamp,
+    updateDoc,
 } from "firebase/firestore";
 
 // Firebase 설정
@@ -113,6 +114,22 @@ export async function deletedPost(postid: string) {
 
     await deleteDoc(doc(db, "posts", postid));
     return fetchedData;
+}
+
+export async function voteOption(postid: string, option: string) {
+    const postRef = doc(db, "posts", postid);
+    const snap = await getDoc(postRef);
+    if (!snap.exists()) throw new Error("Post not found");
+
+    if (!option) {
+        throw new Error(`Option '${option}' not found in post ${postid}`);
+    }
+
+    const currentCount = snap.data().options[option].voteCount || 0;
+    await updateDoc(postRef, {
+        [`options.${option}.voteCount`]: currentCount + 1,
+        [`options.voteCount`]: currentCount + 1,
+    });
 }
 
 // posts (Collection)

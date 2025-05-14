@@ -63,31 +63,44 @@ function PostPage({ params }: { params: { slug: string } }) {
     }, [postId]);
 
     // post
+    const votePost = async (optionKey: "option1" | "option2") => {
+        // 서버에 투표 요청 보내기
+        const response = await fetch(`/api/post/${params.slug}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ option: optionKey }),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || "투표 실패");
+        return { optionKey };
+    };
+
+    const handleVoteSuccess = ({ optionKey }: { optionKey: "option1" | "option2" }) => {
+        const votes = JSON.parse(localStorage.getItem("votes") || "{}");
+        votes[postId] = optionKey;
+        localStorage.setItem("votes", JSON.stringify(votes));
+        setHasVoted(true);
+    };
+
+    const handleVoteError = (error: any) => {
+        alert("투표에 실패했습니다.");
+        console.error(error);
+    };
+
+    const voteMutation = useMutation({
+        mutationFn: votePost,
+        onSuccess: handleVoteSuccess,
+        onError: handleVoteError,
+    });
 
     const onVote = async (optionKey: "option1" | "option2") => {
         const votes = JSON.parse(localStorage.getItem("votes") || "{}");
-        // 중복 투표 방지
         if (votes[postId]) {
             alert("이미 투표하셨습니다.");
             return;
         }
-        try {
-            // 서버에 투표 요청 보내기
-            const response = await fetch(`/api/post/${params.slug}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ option: optionKey }),
-            });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.message || "투표 실패");
-            // 성공 시 로컬 스토리지에 저장
-            votes[postId] = optionKey;
-            localStorage.setItem("votes", JSON.stringify(votes));
-            setHasVoted(true);
-        } catch (error) {
-            alert("투표에 실패했습니다.");
-            console.error(error);
-        }
+
+        voteMutation.mutate(optionKey);
     };
     const deletePost = async () => {
         if (!inputPw.trim()) {

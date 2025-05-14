@@ -8,11 +8,7 @@ import InputComponent from "@/component/ui/InputComponent";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-/*
-[TODO]
-- 결과 보여주기
-- 투표 후 업데이트
-*/
+
 type Post = {
     postid: string;
     createdAt: string;
@@ -35,7 +31,7 @@ type Post = {
         userpw: string;
     };
 };
-// 데이터 재요청 : queryKey: ["post", postId],?
+
 function PostPage({ params }: { params: { slug: string } }) {
     const queryClient = useQueryClient();
     const router = useRouter();
@@ -67,9 +63,7 @@ function PostPage({ params }: { params: { slug: string } }) {
         }
     }, [postId]);
 
-    // post
     const votePost = async (optionKey: "option1" | "option2") => {
-        // 서버에 투표 요청 보내기
         const response = await fetch(`/api/post/${params.slug}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

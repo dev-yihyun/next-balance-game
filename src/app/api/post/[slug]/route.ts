@@ -22,7 +22,6 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
     }
 }
 
-// 데이터 단일 삭제
 export async function DELETE(request: NextRequest, { params }: { params: { slug: string } }) {
     const { inputPw } = await request.json();
     const postid = params?.slug;
@@ -73,7 +72,6 @@ export async function DELETE(request: NextRequest, { params }: { params: { slug:
     return NextResponse.json({ status: 200 });
 }
 
-// 투표처리
 export async function POST(request: Request, { params }: { params: { slug: string } }) {
     const postid = params.slug;
     const { option } = await request.json();

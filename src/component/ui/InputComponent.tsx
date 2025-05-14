@@ -42,7 +42,6 @@ function InputComponent({
                     {value.length}/{maxLength}
                 </div>
             )}
-            {/* 오류 메시지 */}
             {isOverLimit && (
                 <div className="text-sm text-red-500">
                     ❌ 글자 수가 {maxLength}자를 초과했습니다.

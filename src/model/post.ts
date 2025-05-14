@@ -20,16 +20,3 @@ export type AllPost = {
     };
     userinfo: UserInfo;
 };
-
-// posts (Collection)
-//  └─ {postId} (Document)
-//       ├─ postid
-//       ├─ createdAt
-//       ├─ title
-//       ├─ options (Map)
-//       │    ├─ option1: { title, description, voteCount }
-//       │    ├─ option2: { title, description, voteCount }
-//       ├    └─ voteCount
-//       └─ userinfo (Map)
-//            ├─ userid
-//            └─ userpw

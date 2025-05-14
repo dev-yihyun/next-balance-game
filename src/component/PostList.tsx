@@ -9,11 +9,6 @@ import LoadingSpinner from "./LoadingSpinner";
 import PostEmpty from "./PostEmpty";
 import PostListCard from "./PostListCard";
 
-/*
-[TODO]
-무한 스크롤
-*/
-
 function PostList() {
     const [posts, setPosts] = useState<Post[] | null>(null);
     const [isLoading, setIsLoading] = useState(false);

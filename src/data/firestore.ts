@@ -13,7 +13,6 @@ import {
     updateDoc,
 } from "firebase/firestore";
 
-// Firebase 설정
 const firebaseConfig = {
     apiKey: process.env.API_KEY,
     authDomain: process.env.AUTH_DOMAIN,
@@ -22,13 +21,11 @@ const firebaseConfig = {
     messagingSenderId: process.env.MESSAGING_SENDER_ID,
     appId: process.env.APP_ID,
 };
-// Firebase 초기화
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 모든 게시글 가져오기
 export async function fetchAllPost() {
-    const postQuery = query(collection(db, "posts"), orderBy("createdAt", "desc")); // 최신순 정렬
+    const postQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(postQuery);
     if (querySnapshot.empty) {
         return [];
@@ -41,7 +38,6 @@ export async function fetchAllPost() {
     return posts;
 }
 
-// 게시글 추가하기
 export async function addPost(postData: {
     title: string;
     option1: string;
@@ -81,7 +77,6 @@ export async function addPost(postData: {
     return addData;
 }
 
-// 단일 게시글
 export async function fetchSinglelPost(postid: string) {
     if (!postid) {
         return null;
@@ -132,16 +127,3 @@ export async function voteOption(postid: string, option: string) {
         [`options.voteCount`]: currentTotalVote + 1,
     });
 }
-
-// posts (Collection)
-//  └─ {postId} (Document)
-//       ├─ postid
-//       ├─ createdAt
-//       ├─ title
-//       ├─ options (Map)
-//       │    ├─ option1: { title, description, voteCount }
-//       │    ├─ option2: { title, description, voteCount }
-//       ├    └─ voteCount
-//       └─ userinfo (Map)
-//            ├─ userid
-//            └─ userpw

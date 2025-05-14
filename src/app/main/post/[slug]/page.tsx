@@ -5,7 +5,7 @@ import LoadingSpinner from "@/component/LoadingSpinner";
 import OptionCard from "@/component/OptionCard";
 import PostListCard from "@/component/PostListCard";
 import InputComponent from "@/component/ui/InputComponent";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 /*
@@ -35,8 +35,9 @@ type Post = {
         userpw: string;
     };
 };
-
+// 데이터 재요청 : queryKey: ["post", postId],?
 function PostPage({ params }: { params: { slug: string } }) {
+    const queryClient = useQueryClient();
     const router = useRouter();
     const [isShow, setIsShow] = useState(false);
     const [inputPw, setInputPw] = useState("");
@@ -52,7 +53,11 @@ function PostPage({ params }: { params: { slug: string } }) {
         return data?.data;
     };
 
-    const { isLoading, error, data: post } = useQuery({ queryKey: ["posts"], queryFn: fetchPost });
+    const {
+        isLoading,
+        error,
+        data: post,
+    } = useQuery({ queryKey: ["posts", postId], queryFn: fetchPost });
     const totalvote = post?.options?.voteCount;
 
     useEffect(() => {
@@ -80,6 +85,7 @@ function PostPage({ params }: { params: { slug: string } }) {
         votes[postId] = optionKey;
         localStorage.setItem("votes", JSON.stringify(votes));
         setHasVoted(true);
+        queryClient.invalidateQueries({ queryKey: ["posts", postId] });
     };
 
     const handleVoteError = (error: any) => {

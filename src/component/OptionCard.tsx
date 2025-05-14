@@ -4,22 +4,20 @@ type Props = {
         description: string;
         voteCount: number;
     };
+    voted?: boolean;
+    onVote?: () => void;
 };
-function OptionCard({ options }: Props) {
+function OptionCard({ options, onVote, voted }: Props) {
     return (
-        <div
-            className="flex flex-col
-                bg-white rounded-md
-                w-full   max-w-[550px] sm:max-w-[40vw] 
-                h-auto
-                items-center justify-evenly
-                p-6 sm:p-8 shadow-md
-                text-center
-                overflow-hidden
-                md:flex-wrap
-                gap-5
-                cursor-pointer
-                "
+        <button
+            className={`flex flex-col rounded-md w-full max-w-[550px] sm:max-w-[40vw] h-auto items-center justify-evenly p-6 sm:p-8 shadow-md text-center overflow-hidden md:flex-wrap gap-5 transition-all duration-200 
+    ${
+        voted
+            ? "bg-gray-500 opacity-50 cursor-not-allowed"
+            : "bg-white hover:bg-gray-300 cursor-pointer"
+    }`}
+            onClick={onVote}
+            disabled={voted}
         >
             <h1 className="text-2xl sm:text-3xl font-bold whitespace-normal sm:whitespace-normal">
                 {options?.title}
@@ -32,7 +30,7 @@ function OptionCard({ options }: Props) {
                     </p>
                 </>
             )}
-        </div>
+        </button>
     );
 }
 export default OptionCard;

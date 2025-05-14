@@ -118,18 +118,18 @@ export async function deletedPost(postid: string) {
 
 export async function voteOption(postid: string, option: string) {
     const postRef = doc(db, "posts", postid);
-    const snap = await getDoc(postRef);
-    if (!snap.exists()) throw new Error("Post not found");
+    const postSnap = await getDoc(postRef);
+    if (!postSnap.exists()) throw new Error("Post not found");
 
     if (!option) {
         throw new Error(`Option '${option}' not found in post ${postid}`);
     }
 
-    const currentCount = snap.data().options[option].voteCount || 0;
-    const currentTotalCount = snap.data().options.voteCount || 0;
+    const currentOptionCount = postSnap.data().options[option].voteCount || 0;
+    const currentTotalVote = postSnap.data().options.voteCount || 0;
     await updateDoc(postRef, {
-        [`options.${option}.voteCount`]: currentCount + 1,
-        [`options.voteCount`]: currentTotalCount + 1,
+        [`options.${option}.voteCount`]: currentOptionCount + 1,
+        [`options.voteCount`]: currentTotalVote + 1,
     });
 }
 

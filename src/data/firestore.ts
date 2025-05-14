@@ -126,9 +126,10 @@ export async function voteOption(postid: string, option: string) {
     }
 
     const currentCount = snap.data().options[option].voteCount || 0;
+    const currentTotalCount = snap.data().options.voteCount || 0;
     await updateDoc(postRef, {
         [`options.${option}.voteCount`]: currentCount + 1,
-        [`options.voteCount`]: currentCount + 1,
+        [`options.voteCount`]: currentTotalCount + 1,
     });
 }
 

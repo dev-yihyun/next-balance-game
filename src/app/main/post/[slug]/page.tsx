@@ -8,7 +8,11 @@ import InputComponent from "@/component/ui/InputComponent";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
+/*
+[TODO]
+- 결과 보여주기
+- 투표 후 업데이트
+*/
 type Post = {
     postid: string;
     createdAt: string;
@@ -40,26 +44,6 @@ function PostPage({ params }: { params: { slug: string } }) {
     const [hasVoted, setHasVoted] = useState(false);
     const postId = params.slug;
 
-    /*
-    [TODO]
-    - React-Query
-    - 선택한 데이터 업데이트
-        - 데이터 저장 성공시 : 로컬에 저장
-        - 데이터 저장 실패시 : ""
-    - 결과 보여주기
-    */
-
-    /*
-    const votes = JSON.parse(localStorage.getItem("votes") || "{}");
-    // (localStorage.getItem("votes") : 브라우저 로컬 스토리지에서 "votes" 라는 키에 저장 된 값을 가져온다.
-    // 이 값은 보통 문자열형태의 JSON이다.
-    // ex){"123": "option1", "456": "option2"}
-    //   || "{}" : 만약 "votes"키가 존재하지 않거나 null 이라면 {}(빈 객체 문자열)을 대신 사용
-    // 즉 , 초기 로컬 스토리지가 비어있는 경우에도 오류없이 동작
-    // JSON.parse(...) : 문자열 형태인 JSON을 javascript 객체로 변환
-    // 예: "{}" → {}
-    // "{"123": "option1"}" → { 123: "option1" }
-    */
     useEffect(() => {
         const votes = JSON.parse(localStorage.getItem("votes") || "{}");
         if (votes[postId]) {
@@ -129,6 +113,8 @@ function PostPage({ params }: { params: { slug: string } }) {
     };
 
     const { isLoading, error, data: post } = useQuery({ queryKey: ["posts"], queryFn: fetchPost });
+    console.log("##post : ", post);
+    const totalvote = post?.options?.voteCount;
 
     if (isLoading) return <LoadingSpinner />;
 
@@ -151,6 +137,7 @@ function PostPage({ params }: { params: { slug: string } }) {
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-15 sm:gap-10">
                     {post?.options?.option1 && (
                         <OptionCard
+                            total={totalvote}
                             options={post?.options?.option1}
                             onVote={() => onVote("option1")}
                             voted={hasVoted}
@@ -159,6 +146,7 @@ function PostPage({ params }: { params: { slug: string } }) {
                     <p className="text-2xl sm:text-4xl font-bold text-center sm:px-4">VS</p>
                     {post?.options?.option2 && (
                         <OptionCard
+                            total={totalvote}
                             options={post?.options?.option2}
                             onVote={() => onVote("option2")}
                             voted={hasVoted}

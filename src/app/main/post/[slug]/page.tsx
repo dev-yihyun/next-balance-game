@@ -5,7 +5,7 @@ import LoadingSpinner from "@/component/LoadingSpinner";
 import OptionCard from "@/component/OptionCard";
 import PostListCard from "@/component/PostListCard";
 import InputComponent from "@/component/ui/InputComponent";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 /*
@@ -43,6 +43,17 @@ function PostPage({ params }: { params: { slug: string } }) {
 
     const [hasVoted, setHasVoted] = useState(false);
     const postId = params.slug;
+    const fetchPost = async () => {
+        const response = await fetch(`/api/post/${params.slug}`);
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || "포스트를 불러오는 데 실패했습니다.");
+        }
+        return data?.data;
+    };
+
+    const { isLoading, error, data: post } = useQuery({ queryKey: ["posts"], queryFn: fetchPost });
+    const totalvote = post?.options?.voteCount;
 
     useEffect(() => {
         const votes = JSON.parse(localStorage.getItem("votes") || "{}");
@@ -50,6 +61,9 @@ function PostPage({ params }: { params: { slug: string } }) {
             setHasVoted(true);
         }
     }, [postId]);
+
+    // post
+
     const onVote = async (optionKey: "option1" | "option2") => {
         const votes = JSON.parse(localStorage.getItem("votes") || "{}");
         // 중복 투표 방지
@@ -75,46 +89,46 @@ function PostPage({ params }: { params: { slug: string } }) {
             console.error(error);
         }
     };
+    const deletePost = async () => {
+        if (!inputPw.trim()) {
+            alert("비밀번호를 입력해주세요.");
+            return;
+        }
 
-    const fetchPost = async () => {
-        const response = await fetch(`/api/post/${params.slug}`);
-        const data = await response.json();
+        const response = await fetch(`/api/post/${params.slug}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ inputPw }),
+        });
+
+        const result = await response.json();
+
         if (!response.ok) {
-            throw new Error(data.message || "포스트를 불러오는 데 실패했습니다.");
-        }
-        return data?.data;
-    };
-
-    const onDelete = async () => {
-        try {
-            const response = await fetch(`/api/post/${params.slug}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ inputPw }),
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                alert(result.message || "삭제 중 오류가 발생하였습니다. ");
-
-                throw new Error(result.message || "삭제 실패");
-            }
-
-            alert("삭제되었습니다.");
-            router.push("/main");
-        } catch (error) {
-            console.error("삭제 중 오류 발생:", error);
-            setInputPw("");
-            setIsShow(false);
+            alert(result.message || "삭제 중 오류가 발생하였습니다. ");
+            throw new Error(result?.message || "삭제 실패");
         }
     };
+    const handleDeleteSuccess = () => {
+        alert("삭제되었습니다.");
+        router.push("/main");
+    };
+    const handleDeleteError = (error: any) => {
+        console.error("삭제 중 오류 발생:", error);
+        setInputPw("");
+        setIsShow(false);
+    };
 
-    const { isLoading, error, data: post } = useQuery({ queryKey: ["posts"], queryFn: fetchPost });
-    console.log("##post : ", post);
-    const totalvote = post?.options?.voteCount;
+    const deleteMutation = useMutation({
+        mutationFn: deletePost,
+        onSuccess: handleDeleteSuccess,
+        onError: handleDeleteError,
+    });
+
+    const onDelete = () => {
+        deleteMutation.mutate();
+    };
 
     if (isLoading) return <LoadingSpinner />;
 
@@ -185,6 +199,7 @@ function PostPage({ params }: { params: { slug: string } }) {
                                 />
                                 <button
                                     className="whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 cursor-pointer hover:bg-gray-300"
+                                    disabled={deleteMutation.isPending}
                                     onClick={onDelete}
                                 >
                                     삭제

@@ -1,16 +1,6 @@
+import ReactQueryProvider from "@/lib/react-query-provider";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-    variable: "--font-geist-sans",
-    subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-    variable: "--font-geist-mono",
-    subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
     title: {
@@ -32,9 +22,11 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased  min-h-screen bg-gradient-to-br from-[#a58fff] to-[#ffa77f]`}
+                className={`antialiased  min-h-screen bg-gradient-to-br from-[#a58fff] to-[#ffa77f] mx-10`}
             >
-                {children}
+                <ReactQueryProvider>
+                    <main>{children}</main>
+                </ReactQueryProvider>
             </body>
         </html>
     );

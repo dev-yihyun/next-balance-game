@@ -4,6 +4,7 @@ import DataFetchError from "@/component/DataFetchError";
 import LoadingSpinner from "@/component/LoadingSpinner";
 import OptionCard from "@/component/OptionCard";
 import PostListCard from "@/component/PostListCard";
+import ShareButton from "@/component/ShareButton";
 import InputComponent from "@/component/ui/InputComponent";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -233,12 +234,9 @@ function PostPage({ params }: { params: { slug: string } }) {
                             </button>
                         )}
                     </div>
-                    <button
-                        className="whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 cursor-pointer hover:bg-gray-300"
-                        type="button"
-                    >
-                        공유하기
-                    </button>
+                    <ShareButton
+                    // postid={postId}
+                    />
                 </div>
             </section>
         </>

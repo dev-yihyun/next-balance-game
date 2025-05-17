@@ -4,6 +4,7 @@ import DataFetchError from "@/component/DataFetchError";
 import LoadingSpinner from "@/component/LoadingSpinner";
 import OptionCard from "@/component/OptionCard";
 import PostListCard from "@/component/PostListCard";
+import ShareButton from "@/component/ShareButton";
 import InputComponent from "@/component/ui/InputComponent";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -151,13 +152,19 @@ function PostPage({ params }: { params: { slug: string } }) {
         <>
             <section className="flex flex-col gap-5 p-5 pt-10 h-auto ">
                 <div className="">
-                    <PostListCard posttitle={post?.title ?? "제목 없음"} />
+                    <PostListCard posttitle={post?.title ?? "제목 없음"} pointer={false} />
                 </div>
                 <div className="flex flex-wrap justify-start gap-4 w-full sm:w-2/3">
-                    <p className="flex items-center whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 ">
+                    <p
+                        title="작성자"
+                        className="flex items-center whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 "
+                    >
                         {post?.userinfo?.userid ?? "익명"}
                     </p>
-                    <p className="flex items-center whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 ">
+                    <p
+                        title="작성날짜"
+                        className="flex items-center whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 "
+                    >
                         {post?.createdAt ?? "생성 날짜"}
                     </p>
                 </div>
@@ -180,38 +187,19 @@ function PostPage({ params }: { params: { slug: string } }) {
                         />
                     )}
                 </div>
-
-                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-4 mt-4">
-                    {/* 왼쪽 빈 영역 (데스크탑만 표시) */}
-                    <div className="hidden sm:block sm:w-1/3" />
-
-                    {/* 가운데 - 이전/다음 버튼 */}
-                    {/* <div className="flex justify-center gap-4 w-full sm:w-1/3">
-                        <button className="whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 cursor-pointer hover:bg-gray-300">
-                            {"<"}이전 질문
-                        </button>
-                        <button className=" whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 cursor-pointer hover:bg-gray-300">
-                            다음 질문{">"}
-                        </button>
-                    </div> */}
-
-                    {/* 오른쪽 - 작성자/삭제 버튼 */}
-                    <div className="flex justify-center sm:justify-end gap-4 w-full sm:w-1/3">
-                        {/* <p className="flex items-center whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 cursor-pointer hover:bg-gray-300">
-                            {post?.userinfo?.userid ?? "익명"}
-                        </p> */}
+                <div
+                    className="
+                flex flex-row 
+                gap-3
+                justify-between
+                sm:flex-row
+                "
+                >
+                    <div className="flex flex-row gap-3 whitespace-nowrap  ">
                         {isShow ? (
                             <>
-                                <InputComponent
-                                    placeholder="비밀번호"
-                                    type="password"
-                                    value={inputPw}
-                                    onChange={(e) => {
-                                        setInputPw(e.target.value);
-                                    }}
-                                />
                                 <button
-                                    className="whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 cursor-pointer hover:bg-gray-300"
+                                    className="whitespace-nowrap rounded-md p-2 font-bold bg-red-300 cursor-pointer hover:bg-red-400"
                                     disabled={deleteMutation.isPending}
                                     onClick={onDelete}
                                 >
@@ -221,14 +209,23 @@ function PostPage({ params }: { params: { slug: string } }) {
                                     className="whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 cursor-pointer hover:bg-gray-300"
                                     onClick={() => {
                                         setIsShow(!isShow);
+                                        setInputPw("");
                                     }}
                                 >
                                     취소
                                 </button>
+                                <InputComponent
+                                    placeholder="비밀번호"
+                                    type="password"
+                                    value={inputPw}
+                                    onChange={(e) => {
+                                        setInputPw(e.target.value);
+                                    }}
+                                />
                             </>
                         ) : (
                             <button
-                                className="whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 cursor-pointer hover:bg-gray-300"
+                                className="whitespace-nowrap rounded-md p-2 font-bold bg-red-300 cursor-pointer hover:bg-red-400"
                                 onClick={() => {
                                     setIsShow(!isShow);
                                 }}
@@ -237,6 +234,9 @@ function PostPage({ params }: { params: { slug: string } }) {
                             </button>
                         )}
                     </div>
+                    <ShareButton
+                    // postid={postId}
+                    />
                 </div>
             </section>
         </>

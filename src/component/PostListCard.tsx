@@ -2,7 +2,7 @@ import PostErrorCard from "./PostErrorCard";
 
 type Props = {
     posttitle: string;
-    pointer?: boolean; // 선택적 prop으로 지정
+    pointer?: boolean;
 };
 
 function PostListCard({ posttitle, pointer = true }: Props) {

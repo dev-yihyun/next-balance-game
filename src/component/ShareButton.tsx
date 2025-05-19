@@ -6,14 +6,14 @@ type ShareData = {
     files?: File[];
 };
 type Props = {
-    postid: string;
+    posttitle: string;
 };
-export default function ShareButton() {
+export default function ShareButton({ posttitle }: Props) {
     const handleShare = async () => {
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: "킹받는 밸런스 게임 - 너라면 뭘 고를래?",
+                    title: posttitle || "킹받는 밸런스 게임 - 너라면 뭘 고를래?",
                     text: "같은 질문, 다른 선택. 공유하고 누가 더 이상한지(?) 확인해보자!",
                     url: window.location.href,
                 });
@@ -31,7 +31,7 @@ export default function ShareButton() {
             type="button"
             onClick={handleShare}
         >
-            share
+            공유하기
         </button>
     );
 }

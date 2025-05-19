@@ -234,9 +234,7 @@ function PostPage({ params }: { params: { slug: string } }) {
                             </button>
                         )}
                     </div>
-                    <ShareButton
-                    // postid={postId}
-                    />
+                    <ShareButton posttitle={post?.title} />
                 </div>
             </section>
         </>

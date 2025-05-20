@@ -6,11 +6,7 @@ export const metadata: Metadata = {
 };
 
 function MainPage() {
-    return (
-        <>
-            <PostList />
-        </>
-    );
+    return <PostList />;
 }
 
 export default MainPage;

@@ -17,6 +17,7 @@ export type AllPost = {
     options: {
         option1: Option;
         option2: Option;
+        voteCount: number;
     };
     userinfo: UserInfo;
 };

@@ -3,7 +3,7 @@ type Props = {
     value: string;
 };
 
-function PostMetaItem({ title, value }: Props) {
+function PostInfoItem({ title, value }: Props) {
     return (
         <p
             title={title}
@@ -14,4 +14,4 @@ function PostMetaItem({ title, value }: Props) {
     );
 }
 
-export default PostMetaItem;
+export default PostInfoItem;

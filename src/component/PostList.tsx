@@ -1,6 +1,6 @@
 "use client";
 
-import { Post } from "@/model/post";
+import { Post } from "@/types/post";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -27,13 +27,13 @@ function PostList() {
         return data?.data;
     };
 
-    const setOnSuccess = (data: any) => {
+    const setOnSuccess = (data: Post[]) => {
         setPosts(data);
         setIsLoading(false);
         setIsError(false);
     };
 
-    const setOnError = (error: any) => {
+    const setOnError = (error: string) => {
         console.error(`오류: ${error}`);
         setIsLoading(false);
         setIsError(true);

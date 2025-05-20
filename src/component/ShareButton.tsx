@@ -1,10 +1,7 @@
 "use client";
-type ShareData = {
-    title?: string;
-    text?: string;
-    url?: string;
-    files?: File[];
-};
+
+import ActionButton from "./ActionButton";
+
 type Props = {
     posttitle: string;
 };
@@ -25,13 +22,5 @@ export default function ShareButton({ posttitle }: Props) {
         }
     };
 
-    return (
-        <button
-            className="whitespace-nowrap rounded-md p-2 font-bold bg-gray-200 cursor-pointer hover:bg-gray-300"
-            type="button"
-            onClick={handleShare}
-        >
-            공유하기
-        </button>
-    );
+    return <ActionButton text="공유하기" onClick={handleShare} variant="primary" />;
 }

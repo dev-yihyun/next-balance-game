@@ -1,5 +1,6 @@
 "use client";
 
+import { MAX } from "@/types/new/type";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -7,16 +8,18 @@ import InputComponent from "./ui/InputComponent";
 import LabelText from "./ui/LabelText";
 import SubText from "./ui/SubText";
 
+type DataType = {
+    option1: string;
+    option1description: string;
+    option2: string;
+    option2description: string;
+    title: string;
+    userId: string;
+    userPw: string;
+};
+
 function CreateQuestionForm() {
     const router = useRouter();
-
-    const MAX = {
-        title: 50,
-        option: 30,
-        reason: 50,
-        userId: 20,
-        password: 20,
-    };
 
     const [title, setTitle] = useState("");
     const [option1, setOption1] = useState("");
@@ -42,7 +45,7 @@ function CreateQuestionForm() {
         userId.trim() !== "" &&
         userPw.trim() !== "" &&
         isValidLength;
-    const createQuestion = async (data: any) => {
+    const createQuestion = async (data: DataType) => {
         const response = await fetch("/api/post", {
             method: "POST",
             headers: {
@@ -68,7 +71,7 @@ function CreateQuestionForm() {
         alert("질문이 성공적으로 등록되었습니다! 메인으로 이동합니다.");
         router.push("/main");
     };
-    const setOnError = (error: any) => {
+    const setOnError = (error: string) => {
         console.error("오류 발생:", error);
         alert("질문 등록 중 오류가 발생했습니다!  메인으로 이동합니다.");
         router.push("/main");

@@ -11,7 +11,7 @@ export default function ShareButton({ posttitle }: Props) {
             try {
                 await navigator.share({
                     title: posttitle || "킹받는 밸런스 게임 - 너라면 뭘 고를래?",
-                    text: "같은 질문, 다른 선택. 공유하고 누가 더 이상한지(?) 확인해보자!",
+                    text: "어떤 선택을 할까?",
                     url: window.location.href,
                 });
             } catch (err) {

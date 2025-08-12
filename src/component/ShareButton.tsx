@@ -29,6 +29,7 @@ export default function ShareButton({ posttitle }: Props) {
             console.error("공유 실패:", error);
             alert("이 브라우저는 공유를 지원하지 않습니다.");
             return;
+
         }
     };
 

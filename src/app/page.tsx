@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 export default function Home() {
+    console.log("git test");
     return (
         <section className="h-screen flex flex-col justify-center items-center gap-10 px-4">
             <img

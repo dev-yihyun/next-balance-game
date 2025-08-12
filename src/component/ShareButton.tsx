@@ -26,6 +26,7 @@ export default function ShareButton({ posttitle }: Props) {
                 console.error("공유 실패:", error);
                 alert("문제가 발생했습니다. 다시 시도해 주세요.");
                 return;
+
             }
         } else {
             // Web Share API 미지원: 링크 복사

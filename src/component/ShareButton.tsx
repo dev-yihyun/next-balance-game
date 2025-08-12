@@ -16,7 +16,13 @@ export default function ShareButton({ posttitle }: Props) {
         if (navigator.share) {
             try {
                 await navigator.share(shareData);
-            } catch (err) {
+            } catch (err: any) {
+                // 사용자가 공유 취소
+                if (err.name === "AbortError" || err.toString().includes("AbortError")) {
+                    console.log("공유를 취소하였습니다.");
+                    // 알림창 안띄움
+                    return;
+                }
                 console.error("공유 실패:", err);
                 alert("이 브라우저는 공유를 지원하지 않습니다.");
                 return;

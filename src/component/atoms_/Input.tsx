@@ -1,3 +1,5 @@
+import React from "react";
+
 type InputType = "text" | "password";
 
 type Props = {
@@ -10,7 +12,7 @@ type Props = {
     showLength?: boolean;
 };
 
-function InputComponent({
+function Input({
     type = "text",
     placeholder,
     required = false,
@@ -51,4 +53,4 @@ function InputComponent({
     );
 }
 
-export default InputComponent;
+export default React.memo(Input);

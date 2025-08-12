@@ -1,4 +1,4 @@
-import CreateQuestionForm from "@/component/CreateQuestionForm";
+import CreateQuestionForm from "@/component/organisms_/CreateQuestionForm";
 
 function NewPage() {
     return <CreateQuestionForm />;

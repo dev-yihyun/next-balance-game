@@ -1,4 +1,4 @@
-import NavBar from "@/component/NavBar";
+import NavBar from "@/component/molecules_/NavBar";
 
 function MainLayout({ children }: { children: React.ReactNode }) {
     return (

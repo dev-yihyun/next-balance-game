@@ -1,25 +1,27 @@
 "use client";
 
-import ActionButton from "@/component/ActionButton";
-import DataFetchError from "@/component/DataFetchError";
-import LoadingSpinner from "@/component/LoadingSpinner";
-import OptionCard from "@/component/OptionCard";
-import PostInfoItem from "@/component/PostInfoItem";
-import PostListCard from "@/component/PostListCard";
-import ShareButton from "@/component/ShareButton";
-import InputComponent from "@/component/ui/InputComponent";
+import Button from "@/component/atoms_/Button";
+import Input from "@/component/atoms_/Input";
+import Text from "@/component/atoms_/Text";
+import DataFetchError from "@/component/molecules_/DataFetchError";
+import LoadingSpinner from "@/component/molecules_/LoadingSpinner";
+import OptionCard from "@/component/molecules_/OptionCard";
+import PostCard from "@/component/molecules_/PostCard";
+import ShareButton from "@/component/molecules_/ShareButton";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 function PostPage({ params }: { params: { slug: string } }) {
     const queryClient = useQueryClient();
     const router = useRouter();
-    const [isShow, setIsShow] = useState(false);
     const [inputPw, setInputPw] = useState("");
 
     const [hasVoted, setHasVoted] = useState(false);
     const postId = params.slug;
+
+    const [isOpen, setIsOpen] = useState(false);
+
     const fetchPost = async () => {
         const response = await fetch(`/api/post/${params.slug}`);
         const data = await response.json();
@@ -43,6 +45,25 @@ function PostPage({ params }: { params: { slug: string } }) {
         }
     }, [postId]);
 
+    // esc로 모달창 닫기
+    // useEffect(() => {
+    //     const handleEsc = (e: KeyboardEvent) => {
+    //         // 사용자가 esc 키를 눌렸는지 확인
+    //         if (e.key === "Escape") {
+    //             setIsOpen(false);
+    //         }
+    //     };
+    //     // 모달이 열려 있을때만 이벤트 발생
+    //     if (isOpen) {
+    //         window.addEventListener("keydown", handleEsc);
+    //     }
+
+    //     //cleanup 메모리누수 방지
+    //     return () => {
+    //         window.removeEventListener("keydown", handleEsc);
+    //     };
+    // }, [isOpen]);
+
     const votePost = async (optionKey: "option1" | "option2") => {
         const response = await fetch(`/api/post/${params.slug}`, {
             method: "POST",
@@ -63,8 +84,8 @@ function PostPage({ params }: { params: { slug: string } }) {
     };
 
     const handleVoteError = (error: string) => {
-        alert("투표에 실패했습니다.");
-        console.error(error);
+        console.error("투표 에러:", error);
+        alert("투표 중 문제가 발생했습니다. 다시 시도해주세요.");
     };
 
     const voteMutation = useMutation({
@@ -82,8 +103,10 @@ function PostPage({ params }: { params: { slug: string } }) {
 
         voteMutation.mutate(optionKey);
     };
-    const deletePost = async () => {
+    const deletePost = async (inputPw: string) => {
         if (!inputPw.trim()) {
+            setInputPw("");
+            setIsOpen(false);
             alert("비밀번호를 입력해주세요.");
             return;
         }
@@ -99,18 +122,27 @@ function PostPage({ params }: { params: { slug: string } }) {
         const result = await response.json();
 
         if (!response.ok) {
+            setInputPw("");
+            setIsOpen(false);
             alert(result.message || "삭제 중 오류가 발생하였습니다. ");
             throw new Error(result?.message || "삭제 실패");
         }
+        return result;
     };
-    const handleDeleteSuccess = () => {
-        alert("삭제되었습니다.");
-        router.push("/main");
+    const handleDeleteSuccess = (data: { success: boolean }) => {
+        if (data.success) {
+            setInputPw("");
+            setIsOpen(false);
+            alert("삭제되었습니다.");
+            router.push("/main");
+        } else {
+            alert("서버 요청 중 오류가 발생했습니다.");
+        }
     };
     const handleDeleteError = (error: string) => {
         console.error("삭제 중 오류 발생:", error);
         setInputPw("");
-        setIsShow(false);
+        setIsOpen(false);
     };
 
     const deleteMutation = useMutation({
@@ -120,23 +152,24 @@ function PostPage({ params }: { params: { slug: string } }) {
     });
 
     const onDelete = () => {
-        deleteMutation.mutate();
+        deleteMutation.mutate(inputPw);
+    };
+
+    const onOpenModal = () => {
+        setInputPw("");
+        setIsOpen(!isOpen);
     };
 
     if (isLoading) return <LoadingSpinner />;
-
+    if (!post) {
+        notFound(); // 존재하지 않으면 404 페이지로 리디렉트
+    }
     if (error || !post) return <DataFetchError />;
 
     return (
-        <section className="flex flex-col gap-5 p-5 pt-10 h-auto ">
-            <div className="">
-                <PostListCard posttitle={post?.title ?? "제목 없음"} pointer={false} />
-            </div>
-            <div className="flex flex-wrap justify-start gap-4 w-full sm:w-2/3">
-                <PostInfoItem title="작성자" value={post?.userinfo?.userid ?? "익명"} />
-                <PostInfoItem title="작성날짜" value={post?.createdAt ?? "생성 날짜"} />
-            </div>
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-15 sm:gap-10">
+        <section className="flex flex-col gap-8 p-5 mt-10 ">
+            <PostCard posttitle={post?.title ?? "제목 없음"} pointer={false} />
+            <div className="flex flex-col gap-10 justify-between items-center sm:flex-col md:flex-row lg:flex-row ">
                 {post?.options?.option1 && (
                     <OptionCard
                         total={totalvote}
@@ -145,7 +178,9 @@ function PostPage({ params }: { params: { slug: string } }) {
                         voted={hasVoted}
                     />
                 )}
-                <p className="text-2xl sm:text-4xl font-bold text-center sm:px-4">VS</p>
+                <Text bold type="large">
+                    VS
+                </Text>
                 {post?.options?.option2 && (
                     <OptionCard
                         total={totalvote}
@@ -155,52 +190,65 @@ function PostPage({ params }: { params: { slug: string } }) {
                     />
                 )}
             </div>
-            <div
-                className="
-                flex flex-row 
-                gap-3
-                justify-between
-                sm:flex-row
-                "
-            >
-                <div className="flex flex-row gap-3 whitespace-nowrap  ">
-                    {isShow ? (
-                        <>
-                            <ActionButton
-                                text="삭제"
-                                onClick={onDelete}
-                                disabled={deleteMutation.isPending}
-                                variant="delete"
-                            />
+            <div className="border border-gray-300"></div>
+            <div className="flex flex-row items-centers justify-between">
+                <div className="flex flex-row items-center  gap-3">
+                    <div className="bg-gray-300 p-2 rounded-md">
+                        <Text>{post?.userinfo?.userid ?? "익명"}</Text>
+                    </div>
 
-                            <ActionButton
-                                text="취소"
-                                onClick={() => {
-                                    setIsShow(!isShow);
-                                    setInputPw("");
-                                }}
-                                variant="default"
-                            />
-                            <InputComponent
-                                placeholder="비밀번호"
-                                type="password"
-                                value={inputPw}
-                                onChange={(e) => {
-                                    setInputPw(e.target.value);
-                                }}
-                            />
-                        </>
-                    ) : (
-                        <ActionButton
-                            text="삭제"
-                            onClick={() => {
-                                setIsShow(!isShow);
-                            }}
-                            variant="delete"
-                        />
+                    <Button buttonType="default" onClick={onOpenModal}>
+                        <Text bold type="medium">
+                            삭제
+                        </Text>
+                    </Button>
+                    {isOpen && (
+                        <div
+                            onClick={onOpenModal}
+                            className="fixed inset-0 flex items-center justify-center bg-neutral-900/70 bg-opacity-50 z-50"
+                        >
+                            <div
+                                onClick={(e) => e.stopPropagation()} // 이벤트 처리 막기
+                                className="flex flex-col gap-5 bg-white p-5 rounded-2xl shadow-lg w-96 relative"
+                            >
+                                <Text bold type="medium">
+                                    비밀번호 삭제
+                                </Text>
+                                <Text type="small">
+                                    게시글을 삭제하려면 비밀번호를 입력해주세요.
+                                </Text>
+                                <Input
+                                    placeholder="비밀번호를 입력해 주세요."
+                                    maxLength={10}
+                                    type="password"
+                                    required
+                                    value={inputPw}
+                                    onChange={(e) => setInputPw(e.target.value)}
+                                />
+                                <div className="flex flex-row gap-4">
+                                    <Button buttonType="default" onClick={onOpenModal}>
+                                        <Text type="medium">취소</Text>
+                                    </Button>
+                                    <Button
+                                        buttonType="confirm"
+                                        onClick={onDelete}
+                                        disabled={!inputPw.trim() || deleteMutation.isPending}
+                                    >
+                                        <Text type="medium">확인</Text>
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
                     )}
                 </div>
-                <ShareButton posttitle={post?.title} />
+                <div className="flex flex-row gap-3">
+                    <ShareButton posttitle={post?.title} />
+                    {/* <Button buttonType="report">
+                        <Text bold type="medium">
+                            신고
+                        </Text>
+                    </Button> */}
+                </div>
             </div>
         </section>
     );

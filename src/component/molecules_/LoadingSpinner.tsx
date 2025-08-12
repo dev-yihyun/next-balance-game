@@ -1,11 +1,12 @@
-import { BeatLoader } from "react-spinners";
+import React from "react";
+import Loading from "../atoms_/Loading";
 
 function LoadingSpinner() {
     return (
         <section className="h-screen flex flex-col justify-center items-center gap-10 text-center px-4">
-            <BeatLoader color="#000000" size={25} />
+            <Loading />
         </section>
     );
 }
 
-export default LoadingSpinner;
+export default React.memo(LoadingSpinner);

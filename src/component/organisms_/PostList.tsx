@@ -4,10 +4,10 @@ import { Post } from "@/types/post";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import DataFetchError from "./DataFetchError";
-import LoadingSpinner from "./LoadingSpinner";
-import PostEmpty from "./PostEmpty";
-import PostListCard from "./PostListCard";
+import DataFetchError from "../molecules_/DataFetchError";
+import LoadingSpinner from "../molecules_/LoadingSpinner";
+import PostCard from "../molecules_/PostCard";
+import PostEmpty from "../molecules_/PostEmpty";
 
 function PostList() {
     const [posts, setPosts] = useState<Post[] | null>(null);
@@ -60,8 +60,8 @@ function PostList() {
             ) : (
                 <>
                     {posts?.map((post: Post) => (
-                        <Link key={post.postid} href={`/main/post/${post?.postid}`}>
-                            <PostListCard posttitle={post?.title ?? ""} />
+                        <Link key={post.postid} href={`/main/post/${post?.postid}`} rel="preload">
+                            <PostCard posttitle={post?.title ?? ""} />
                         </Link>
                     ))}
                 </>

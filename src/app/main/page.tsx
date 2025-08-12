@@ -1,4 +1,4 @@
-import PostList from "@/component/PostList";
+import PostList from "@/component/organisms_/PostList";
 import { Metadata } from "next";
 export const metadata: Metadata = {
     title: "극한의 선택, 당신이라면 어느 쪽?",

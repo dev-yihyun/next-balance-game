@@ -17,6 +17,7 @@ export default function ShareButton({ posttitle }: Props) {
     };
 
     const handleShare = async () => {
+
         if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
             await navigator
                 .share(shareData)
@@ -34,6 +35,7 @@ export default function ShareButton({ posttitle }: Props) {
             console.log("Web Share API를 지원하지 않는 환경입니다.");
             navigator.clipboard.writeText(shareData.url);
             alert("링크가 복사되었습니다!");
+
         }
         // try {
         //     if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
